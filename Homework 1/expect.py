@@ -1,23 +1,12 @@
 ﻿
 def expect(xDistribution, function):
-    
-##################################################
-#		Your code here
-##################################################  
-    
-    return expectation
-
-
+    return sum([ function(x) * p_x for x, p_x in xDistribution.items() ])
 
  
 def getVariance(xDistribution):
-    
-##################################################
-#		Your code here
-#       Call your own “expect” function
-################################################## 
-    
-    return variance
+    mu = expect(xDistribution, lambda x: x)
+    return expect(xDistribution, lambda x: (x - mu) ** 2)
+
 
 def main():
     xDistributionExample1={1: 1/5, 2: 2/5, 3: 2/5}
