@@ -8,35 +8,45 @@ def getSamplar():
     return getSample
 
 def e_greedy(Q, e):
-
-##################################################
-#		Your code here
-##################################################  
-    
-    return action
+    if np.random.rand() < e:
+        return np.random.choice(list(Q.keys()))
+    else:
+        best_value = None
+        best_actions = list()
+        for action, value in Q.items():
+            if best_value == None or value > best_value:
+                best_value = value
+                best_choices = [ action ]
+            elif value == best_value:
+                best_choices.append(action)
+        return np.random.choice(best_choices)
     
 def upperConfidenceBound(Q, N, c):
-   
-##################################################
-#		Your code here
-##################################################  
- 
-    return action
+    t = sum(N.values()) + 1
+    best_value = None
+    best_actions = list()
+    for action, value in Q.items():
+        ucb = value + c * np.sqrt(np.log(t) / N[action]) if N[action] else float('inf')
+        if best_value == None or ucb > best_value:
+            best_value = ucb
+            best_choices = [ action ]
+        elif ucb == best_value:
+            best_choices.append(action)
+    return np.random.choice(best_choices)
 
 def updateQN(action, reward, Q, N):
-
-##################################################
-#		Your code here
-##################################################  
- 
+    QNew, NNew = Q.copy(), N.copy()
+    NNew[action] += 1
+    QNew[action] += (reward - Q[action]) / NNew[action]
     return QNew, NNew
 
 def decideMultipleSteps(Q, N, policy, bandit, maxSteps):
-
-##################################################
-#		Your code here
-##################################################  
- 
+    actionReward = list()
+    for _ in range(maxSteps):
+        action = policy(Q, N)
+        reward = bandit(action)
+        actionReward.append((action, reward))
+        Q, N = updateQN(action, reward, Q, N)
     return {'Q':Q, 'N':N, 'actionReward':actionReward}
 
 def plotMeanReward(actionReward,label):
